@@ -1,4 +1,4 @@
-# namedmanager-script
+# About this Repo
 Script to automate namedmanager installation
-This script automate only namedmanager installation.
-For best installation i recommand the official repos
+This script is only for namedmanager installation automation.
+To get more info i recommand the official repos
