@@ -1,5 +1,5 @@
 #!/bin/bash
-#SCRIPT INSTALLATION NAMEDMANAGER
+#SCRIPT INSTALLATION NAMEDMANAGER (FEDORA20 /CENTOS7)
 #OUSMANE SANOGO
 
 #mise a jour du server et on install wget nano et apache
@@ -82,11 +82,13 @@ sed -i '/<\/Location>/ i \\tRequire all granted' /etc/httpd/conf.d/namedmanager.
 
 #on modifie les logs de namedmanager
 
+myip=`ifconfig eth0 | awk ' /inet/ { print $2 } ' | grep -v '^[a-z].*'`
 touch /var/log/namedmanager_messages
 
-sed -i 's/\/var\/log\/message/\/var\/log\/namedmanager_messages/g' /etc/namedmanager/config-bind.php
-sed -i 's/http:\/\/example.com\/namedexample/http:\/\/localhost\/namedmanager/g' /etc/namedmanager/config-bind.php
-sed -i 's/dnsmaster.example.com/localhost/g' /etc/namedmanager/config-bind.php
+sed -i 's/\/var\/log\/messages/\/var\/log\/namedmanager_messages/g' /etc/namedmanager/config-bind.php
+sed -i 's/http:\/\/example.com\/namedexample/http:\/\/$myip\/namedmanager/g' /etc/namedmanager/config-bind.php
+sed -i "s/dnsmaster.example.com/$myip/g" /etc/namedmanager/config-bind.php
+sed -i "s/localhost/$myip/g" /etc/namedmanager/config.php
 sed -i "s/ultrahighsecretkey/`date +%s | sha256sum | base64 | head -c 32 ; echo`/g" /etc/namedmanager/config-bind.php
 
 #on ajoute le pass de la BDD
@@ -96,5 +98,6 @@ sed -i 's/^my $db_pass.*/my $db_pass = "changeme";/g' /usr/share/namedmanager/re
 
 /usr/share/namedmanager/resources/autoinstall.pl
 
+systemctl restart httpd
 #Fin installation
 #on peut enfin se connecter sur le lien "http://IP/namedmanager"
