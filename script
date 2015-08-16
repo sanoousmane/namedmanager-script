@@ -101,3 +101,4 @@ sed -i 's/^my $db_pass.*/my $db_pass = "changeme";/g' /usr/share/namedmanager/re
 systemctl restart httpd
 #Fin installation
 #on peut enfin se connecter sur le lien "http://IP/namedmanager"
+echo "on peut enfin se connecter sur le lien http://$myip/namedmanager"
