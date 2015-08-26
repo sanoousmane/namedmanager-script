@@ -54,7 +54,7 @@ yum -y install  \
 sed -i 's/\tlisten-on port 53.*;$/\tlisten-on port 53 { any; };/g' /etc/named.conf
 sed -i 's/\tlisten-on-v6 port*;$/\tlisten-on-v6 port 53 { any; };/g' /etc/named.conf
 sed -i 's/\tallow-query*;/\tallow-query { any; };/g' /etc/named.conf
-sed -i '/allow-query/ a \\tinclude "/etc/named.namedmanager.conf";' /etc/named.conf
+sed -i ' $ a include /etc/named.namedmanager.conf;' /etc/named.conf
 
 
 #on start mysql et apache
