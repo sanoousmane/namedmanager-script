@@ -54,8 +54,8 @@ yum -y install  \
 sed -i 's/\tlisten-on port 53.*;$/\tlisten-on port 53 { any; };/g' /etc/named.conf
 sed -i 's/\tlisten-on-v6 port*;$/\tlisten-on-v6 port 53 { any; };/g' /etc/named.conf
 sed -i 's/\tallow-query*;/\tallow-query { any; };/g' /etc/named.conf
-sed -i ' $ a include /etc/named.namedmanager.conf;' /etc/named.conf
-
+#sed -i ' $ a include /etc/named.namedmanager.conf;' /etc/named.conf
+echo '"include /etc/named.namedmanager.conf;"' >> /etc/named.conf
 
 #on start mysql et apache
 
@@ -84,10 +84,12 @@ sed -i '/<\/Location>/ i \\tRequire all granted' /etc/httpd/conf.d/namedmanager.
 
 myip=`ifconfig eth0 | awk ' /inet/ { print $2 } ' | grep -v '^[a-z].*'`
 touch /var/log/namedmanager_messages
+HOST=`hostname`
+
 
 sed -i 's/\/var\/log\/messages/\/var\/log\/namedmanager_messages/g' /etc/namedmanager/config-bind.php
-sed -i 's/http:\/\/example.com\/namedexample/http:\/\/$myip\/namedmanager/g' /etc/namedmanager/config-bind.php
-sed -i "s/dnsmaster.example.com/$myip/g" /etc/namedmanager/config-bind.php
+sed -i 's/http:\/\/example.com\/namedexample/http:\/\/"$myip"\/namedmanager/g' /etc/namedmanager/config-bind.php
+sed -i "s/dnsmaster.example.com/$HOST/g" /etc/namedmanager/config-bind.php
 sed -i "s/localhost/$myip/g" /etc/namedmanager/config.php
 sed -i "s/ultrahighsecretkey/`date +%s | sha256sum | base64 | head -c 32 ; echo`/g" /etc/namedmanager/config-bind.php
 
